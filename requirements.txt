@@ -1,0 +1,10 @@
+pandas
+numpy
+requests
+xgboost
+scikit-learn
+joblib
+pyarrow
+schedule
+python-telegram-bot
+ccxt

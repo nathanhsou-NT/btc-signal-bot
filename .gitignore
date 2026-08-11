@@ -1,0 +1,15 @@
+# dados brutos — regenerados a cada retreino, nao precisam de versionamento
+data/
+
+# lixo de SO / editores
+.DS_Store
+__MACOSX/
+__pycache__/
+*.pyc
+
+# config local do Claude Code, nao e do projeto
+.claude/
+
+# script local com o token real do Telegram (nunca commitar)
+start_bot.bat
+.env
