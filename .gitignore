@@ -13,3 +13,12 @@ __pycache__/
 # script local com o token real do Telegram (nunca commitar)
 start_bot.bat
 .env
+
+# versoes antigas / ferramentas de debug manual, fora do repo
+alert.py
+btc_alert-.py
+diagnose.py
+predict_live.py
+
+# saida de treino que so serve de referencia local, regenerada toda semana
+oos_predictions.parquet

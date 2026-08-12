@@ -7,4 +7,3 @@ joblib
 pyarrow
 schedule
 python-telegram-bot
-ccxt
