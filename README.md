@@ -1,84 +1,84 @@
-# Automação do retreino semanal — guia de setup
+# Weekly retrain automation — setup guide
 
-O que foi feito nesta pasta:
+What was done in this folder:
 
-- Removi o token do Telegram e o chat id que estavam escritos direto nos
-  arquivos (`alert.py`, `alert_ml.py`, `btc_alert-.py`) — agora eles vêm de
-  variáveis de ambiente. Isso é obrigatório para poder subir o código pro
-  GitHub sem vazar credenciais.
-- Criei `.github/workflows/weekly-retrain.yml`: toda segunda-feira às 07:00
-  UTC (04:00 na Flórida em horário de verão), o GitHub roda sozinho:
+- Removed the Telegram token and chat id that were hardcoded directly in
+  the files (`alert.py`, `alert_ml.py`, `btc_alert-.py`) — they now come from
+  environment variables. This is required to push the code to GitHub without
+  leaking credentials.
+- Created `.github/workflows/weekly-retrain.yml`: every Monday at 07:00 UTC
+  (04:00 in Florida during daylight saving time), GitHub runs on its own:
   `fetch_data.py` → `build_dataset.py` → `train_walkforward.py --save-model`,
-  te manda um resumo do resultado no Telegram, e sobe o `model.joblib` novo
-  pro repositório.
-- Criei `start_bot.bat` (só na sua máquina, **não vai pro GitHub**) que dá
-  `git pull` — puxando o modelo mais recente — antes de iniciar o
-  `alert_ml.py`. `start_bot.example.bat` é o modelo sem o token, caso precise
-  recriar.
-- Já dei `git init` e o primeiro commit aqui na pasta, sem nenhum segredo no
-  histórico (conferi com `git grep`).
+  sends you a summary of the result on Telegram, and pushes the new
+  `model.joblib` to the repository.
+- Created `start_bot.bat` (local machine only, **does not go to GitHub**),
+  which runs `git pull` — pulling the latest model — before starting
+  `alert_ml.py`. `start_bot.example.bat` is the template without the token,
+  in case you need to recreate it.
+- Ran `git init` and the first commit in this folder, with no secrets in the
+  history (verified with `git grep`).
 
-Falta só: criar o repositório no GitHub e conectar. Isso eu não consigo fazer
-por você (preciso das suas credenciais), mas é rápido:
+The only thing left: create the repository on GitHub and connect it. I can't
+do that for you (I'd need your credentials), but it's quick:
 
-## 1. Criar o repositório no GitHub
+## 1. Create the repository on GitHub
 
-1. Acesse [github.com/new](https://github.com/new).
-2. Nome sugerido: `sinais-btc` (marque como **Private**, já que o código
-   fala do seu modelo/estratégia).
-3. **Não** marque "Add a README" — a pasta já tem tudo.
-4. Clique em "Create repository".
+1. Go to [github.com/new](https://github.com/new).
+2. Suggested name: `sinais-btc` (mark it **Private**, since the code
+   describes your model/strategy).
+3. **Don't** check "Add a README" — the folder already has everything.
+4. Click "Create repository".
 
-## 2. Subir o código
+## 2. Push the code
 
-Abra um terminal (PowerShell ou Prompt de Comando) **nesta pasta**
-(`C:\Users\Natha\OneDrive\Área de Trabalho\Sinais`) e rode:
+Open a terminal (PowerShell or Command Prompt) **in this folder**
+(`C:\Users\Natha\OneDrive\Área de Trabalho\Sinais`) and run:
 
 ```
-git remote add origin https://github.com/SEU_USUARIO/sinais-btc.git
+git remote add origin https://github.com/YOUR_USERNAME/sinais-btc.git
 git branch -M main
 git push -u origin main
 ```
 
-(troque `SEU_USUARIO` pelo seu usuário do GitHub — o GitHub mostra o comando
-exato na tela depois de criar o repo).
+(replace `YOUR_USERNAME` with your GitHub username — GitHub shows the exact
+command on screen after you create the repo).
 
-## 3. Configurar os Secrets no GitHub
+## 3. Configure the Secrets on GitHub
 
-No repositório: **Settings → Secrets and variables → Actions → New
-repository secret**. Crie dois:
+In the repository: **Settings → Secrets and variables → Actions → New
+repository secret**. Create two:
 
-- `TELEGRAM_TOKEN` → o token do seu bot
+- `TELEGRAM_TOKEN` → your bot's token
 - `TELEGRAM_CHAT_ID` → `7913921593`
 
-Sem isso o workflow ainda retreina o modelo normalmente, só não manda a
-notificação.
+Without this the workflow still retrains the model normally, it just won't
+send the notification.
 
-## 4. Testar sem esperar a segunda-feira
+## 4. Test without waiting for Monday
 
-Na aba **Actions** do repositório → clique em "Retreino semanal do modelo
-BTC" → **Run workflow**. Acompanhe os logs; no final deve aparecer o commit
-automático com o `model.joblib` atualizado e a notificação no Telegram (se
-configurou os secrets).
+In the repository's **Actions** tab → click "Retreino semanal do modelo
+BTC" → **Run workflow**. Watch the logs; at the end you should see the
+automatic commit with the updated `model.joblib` and the Telegram
+notification (if you configured the secrets).
 
-## 5. Como o bot local pega o modelo novo
+## 5. How the local bot picks up the new model
 
-Toda vez que for rodar o bot, use o `start_bot.bat` (dá duplo-clique) em vez
-de rodar `python alert_ml.py` direto — ele atualiza o repositório local
-(pegando o modelo retreinado) antes de iniciar.
+Every time you run the bot, use `start_bot.bat` (double-click it) instead of
+running `python alert_ml.py` directly — it updates the local repository
+(pulling the retrained model) before starting.
 
-## Recomendação de segurança
+## Security recommendation
 
-O token do Telegram (`8767479244:...`) já esteve escrito em texto puro nos
-arquivos por um tempo. Não é urgente, mas o ideal é gerar um token novo no
-[@BotFather](https://t.me/BotFather) (`/revoke` no bot atual → `/newtoken` ou
-similar) e atualizar em `start_bot.bat` e nos Secrets do GitHub. Assim o
-token antigo, que só existiu localmente, deixa de valer.
+The Telegram token (`8767479244:...`) was written in plain text in the
+files for a while. It's not urgent, but the ideal move is to generate a new
+token on [@BotFather](https://t.me/BotFather) (`/revoke` on the current bot
+→ `/newtoken` or similar) and update it in `start_bot.bat` and in the GitHub
+Secrets. That way the old token, which only ever existed locally, stops
+being valid.
 
-## Observação sobre OneDrive
+## Note about OneDrive
 
-Esta pasta é sincronizada pelo OneDrive. Operações de git (init/commit) às
-vezes engasgam aqui por causa do sync na nuvem — se algum comando `git`
-travar ("Unable to create index.lock"), feche o OneDrive temporariamente
-(ícone na bandeja → Pausar sincronização) ou tente de novo depois de alguns
-segundos.
+This folder is synced by OneDrive. Git operations (init/commit) sometimes
+stall here because of the cloud sync — if a `git` command hangs ("Unable to
+create index.lock"), pause OneDrive temporarily (tray icon → Pause syncing)
+or try again after a few seconds.
