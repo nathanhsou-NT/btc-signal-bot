@@ -209,8 +209,11 @@ def check_signal():
 if __name__ == "__main__":
     print("=" * 50)
     print("  BTC M15 — Monitor de Sinais ML v2 (modelo walk-forward)")
-    print(f"  Modelo: {MODEL_PATH} | Modo: {SIGNAL_MODE} "
-          f"| Alvo: ~{TARGET_SIGNALS_PER_DAY} sinais/dia")
+    if SIGNAL_MODE == "quantile":
+        modo_info = f"Alvo: ~{TARGET_SIGNALS_PER_DAY} sinais/dia (ranking)"
+    else:
+        modo_info = f"Threshold: {THRESHOLD:.2f} (fixo)"
+    print(f"  Modelo: {MODEL_PATH} | Modo: {SIGNAL_MODE} | {modo_info}")
     print("  Decisão no minuto 13/28/43/58 (2 min antes da próxima vela)")
     print("=" * 50)
 
