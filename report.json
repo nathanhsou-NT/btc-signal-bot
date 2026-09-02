@@ -1,60 +1,60 @@
 {
-  "n_oos": 55013,
+  "n_oos": 54983,
   "folds": 42,
-  "base_rate_verde": 0.4898478541435661,
-  "auc": 0.5359861584283669,
-  "acc_sempre_opera": 0.5260029447585116,
+  "base_rate_verde": 0.4895876907407744,
+  "auc": 0.5322928790489039,
+  "acc_sempre_opera": 0.5233435789243948,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 55013,
+      "trades": 54983,
       "cobertura": 1.0,
-      "winrate": 0.526,
-      "ev_por_trade": -0.0164
+      "winrate": 0.5233,
+      "ev_por_trade": -0.0213
     },
     {
       "threshold": 0.53,
-      "trades": 21369,
-      "cobertura": 0.388,
-      "winrate": 0.5462,
-      "ev_por_trade": 0.0213
+      "trades": 20534,
+      "cobertura": 0.373,
+      "winrate": 0.5431,
+      "ev_por_trade": 0.0155
     },
     {
       "threshold": 0.5348,
-      "trades": 18385,
-      "cobertura": 0.334,
-      "winrate": 0.5512,
-      "ev_por_trade": 0.0307
+      "trades": 17626,
+      "cobertura": 0.321,
+      "winrate": 0.5491,
+      "ev_por_trade": 0.0269
     },
     {
       "threshold": 0.55,
-      "trades": 10835,
-      "cobertura": 0.197,
-      "winrate": 0.562,
-      "ev_por_trade": 0.0509
+      "trades": 10316,
+      "cobertura": 0.188,
+      "winrate": 0.5613,
+      "ev_por_trade": 0.0496
     },
     {
       "threshold": 0.58,
-      "trades": 3634,
-      "cobertura": 0.066,
-      "winrate": 0.593,
-      "ev_por_trade": 0.1089
+      "trades": 3683,
+      "cobertura": 0.067,
+      "winrate": 0.581,
+      "ev_por_trade": 0.0866
     },
     {
       "threshold": 0.6,
-      "trades": 1857,
+      "trades": 1853,
       "cobertura": 0.034,
-      "winrate": 0.594,
-      "ev_por_trade": 0.1107
+      "winrate": 0.5904,
+      "ev_por_trade": 0.104
     },
     {
       "threshold": 0.65,
-      "trades": 347,
+      "trades": 321,
       "cobertura": 0.006,
-      "winrate": 0.5908,
-      "ev_por_trade": 0.1048
+      "winrate": 0.6199,
+      "ev_por_trade": 0.1593
     }
   ]
 }
