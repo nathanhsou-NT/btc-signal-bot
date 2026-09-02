@@ -46,15 +46,21 @@ MODEL_PATH = "model.joblib"
 # ---- MODO DO SINAL --------------------------------------------
 # "quantile"  -> dispara nas velas em que o modelo esta RELATIVAMENTE
 #                mais convicto (ranking vs ultimos dias). Garante volume
-#                de sinais configuravel. Modo recomendado p/ conta demo.
-# "breakeven" -> so dispara acima do breakeven do payout (raramente
-#                dispara com o modelo atual).
-SIGNAL_MODE = "quantile"
-TARGET_SIGNALS_PER_DAY = 8   # media de sinais/dia no modo quantile
-QUANTILE_LOOKBACK_DAYS = 4   # janela p/ calcular o ranking
+#                de sinais configuravel.
+# "breakeven" -> dispara sempre que p passar de MIN_PROB (ou do breakeven
+#                do payout, se MIN_PROB for None). Threshold fixo, direto
+#                comparavel com a tabela do report.json.
+#
+# Testado no walk-forward (report.json): thr=0.53 -> ~36 sinais/dia,
+# winrate 54,4% (breakeven 53,48%), EV +0,017/trade. Ajuste MIN_PROB pra
+# subir/descer o volume de sinais (0.55 ~17/dia, 0.58 ~6/dia, 0.60 ~3/dia).
+SIGNAL_MODE = "breakeven"
+MIN_PROB = 0.53
 
-PAYOUT = 0.90                # usado no modo breakeven e exibido na msg
-MIN_PROB = None
+TARGET_SIGNALS_PER_DAY = 8   # so usado se SIGNAL_MODE = "quantile"
+QUANTILE_LOOKBACK_DAYS = 4   # janela p/ calcular o ranking (modo quantile)
+
+PAYOUT = 0.90                # payout real da corretora, exibido na msg
 
 # Fuso horário para exibir o horário da vela na mensagem
 UTC_OFFSET = -4          # Florida (verão)
