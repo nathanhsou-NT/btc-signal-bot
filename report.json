@@ -1,60 +1,60 @@
 {
-  "n_oos": 54984,
+  "n_oos": 54986,
   "folds": 42,
-  "base_rate_verde": 0.48965153499199765,
-  "auc": 0.5332061367630117,
-  "acc_sempre_opera": 0.5244980357922304,
+  "base_rate_verde": 0.48979740297530283,
+  "auc": 0.5324420261518303,
+  "acc_sempre_opera": 0.5217146182664678,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 54984,
+      "trades": 54986,
       "cobertura": 1.0,
-      "winrate": 0.5245,
-      "ev_por_trade": -0.0192
+      "winrate": 0.5217,
+      "ev_por_trade": -0.0244
     },
     {
       "threshold": 0.53,
-      "trades": 20960,
-      "cobertura": 0.381,
-      "winrate": 0.5432,
-      "ev_por_trade": 0.0157
+      "trades": 20176,
+      "cobertura": 0.367,
+      "winrate": 0.5437,
+      "ev_por_trade": 0.0167
     },
     {
       "threshold": 0.5348,
-      "trades": 18103,
-      "cobertura": 0.329,
-      "winrate": 0.5451,
-      "ev_por_trade": 0.0193
+      "trades": 17089,
+      "cobertura": 0.311,
+      "winrate": 0.5492,
+      "ev_por_trade": 0.027
     },
     {
       "threshold": 0.55,
-      "trades": 10900,
-      "cobertura": 0.198,
-      "winrate": 0.5573,
-      "ev_por_trade": 0.0422
+      "trades": 9924,
+      "cobertura": 0.18,
+      "winrate": 0.5598,
+      "ev_por_trade": 0.0467
     },
     {
       "threshold": 0.58,
-      "trades": 3841,
-      "cobertura": 0.07,
-      "winrate": 0.5931,
-      "ev_por_trade": 0.109
+      "trades": 3497,
+      "cobertura": 0.064,
+      "winrate": 0.5776,
+      "ev_por_trade": 0.0802
     },
     {
       "threshold": 0.6,
-      "trades": 1940,
-      "cobertura": 0.035,
-      "winrate": 0.5938,
-      "ev_por_trade": 0.1104
+      "trades": 1765,
+      "cobertura": 0.032,
+      "winrate": 0.5909,
+      "ev_por_trade": 0.105
     },
     {
       "threshold": 0.65,
-      "trades": 342,
-      "cobertura": 0.006,
-      "winrate": 0.6111,
-      "ev_por_trade": 0.1428
+      "trades": 218,
+      "cobertura": 0.004,
+      "winrate": 0.5917,
+      "ev_por_trade": 0.1066
     }
   ]
 }
