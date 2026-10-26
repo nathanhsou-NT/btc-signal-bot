@@ -1,60 +1,60 @@
 {
-  "n_oos": 55013,
+  "n_oos": 55033,
   "folds": 42,
-  "base_rate_verde": 0.4897024339701525,
-  "auc": 0.5333389654573024,
-  "acc_sempre_opera": 0.5251122461963535,
+  "base_rate_verde": 0.4895971508004288,
+  "auc": 0.5326237734735932,
+  "acc_sempre_opera": 0.5224501662638781,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 55013,
+      "trades": 55033,
       "cobertura": 1.0,
-      "winrate": 0.5251,
-      "ev_por_trade": -0.018
+      "winrate": 0.5225,
+      "ev_por_trade": -0.023
     },
     {
       "threshold": 0.53,
-      "trades": 20422,
-      "cobertura": 0.371,
-      "winrate": 0.5419,
-      "ev_por_trade": 0.0134
+      "trades": 22093,
+      "cobertura": 0.401,
+      "winrate": 0.54,
+      "ev_por_trade": 0.0099
     },
     {
       "threshold": 0.5348,
-      "trades": 17377,
-      "cobertura": 0.316,
-      "winrate": 0.5474,
-      "ev_por_trade": 0.0236
+      "trades": 18955,
+      "cobertura": 0.344,
+      "winrate": 0.5458,
+      "ev_por_trade": 0.0207
     },
     {
       "threshold": 0.55,
-      "trades": 10273,
-      "cobertura": 0.187,
+      "trades": 11042,
+      "cobertura": 0.201,
       "winrate": 0.5604,
-      "ev_por_trade": 0.0479
+      "ev_por_trade": 0.048
     },
     {
       "threshold": 0.58,
-      "trades": 3614,
-      "cobertura": 0.066,
-      "winrate": 0.5753,
-      "ev_por_trade": 0.0757
+      "trades": 3767,
+      "cobertura": 0.068,
+      "winrate": 0.5795,
+      "ev_por_trade": 0.0837
     },
     {
       "threshold": 0.6,
-      "trades": 1772,
-      "cobertura": 0.032,
-      "winrate": 0.5942,
-      "ev_por_trade": 0.1112
+      "trades": 1950,
+      "cobertura": 0.035,
+      "winrate": 0.5882,
+      "ev_por_trade": 0.0999
     },
     {
       "threshold": 0.65,
-      "trades": 216,
-      "cobertura": 0.004,
-      "winrate": 0.6343,
-      "ev_por_trade": 0.1861
+      "trades": 329,
+      "cobertura": 0.006,
+      "winrate": 0.614,
+      "ev_por_trade": 0.1481
     }
   ]
 }
