@@ -44,6 +44,17 @@ def build_message() -> str:
             f"{t['threshold']:.2f} | {t['cobertura']:.1%} | "
             f"{t['winrate']:.1%} | {t['ev_por_trade']:+.4f}{flag}"
         )
+    mf = r.get("modelo_final")
+    if mf:
+        ok = mf["platt_slope"] > 0.2 and mf["cobertura_calib"] >= 0.05
+        linhas += [
+            "",
+            f"<b>Modelo publicado</b> {'✅' if ok else '⚠️'}",
+            f"Árvores: {mf['arvores']} | slope Platt: {mf['platt_slope']:.3f}",
+            f"p na calibração: {mf['p_min']:.3f} – {mf['p_max']:.3f}",
+            f"Sinais esperados @{mf['cobertura_thr']}: {mf['cobertura_calib']:.1%} das velas "
+            f"(~{mf['cobertura_calib'] * 96:.0f}/dia)",
+        ]
     return "\n".join(linhas)
 
 

@@ -43,9 +43,10 @@ def make_calibrator(method: str):
     return IsotonicRegression(out_of_bounds="clip", y_min=0.01, y_max=0.99)
 
 
-def make_model(seed: int) -> XGBClassifier:
+def make_model(seed: int, n_estimators: int = 600,
+               early_stopping: bool = True) -> XGBClassifier:
     return XGBClassifier(
-        n_estimators=600,
+        n_estimators=n_estimators,
         learning_rate=0.03,
         max_depth=4,
         min_child_weight=20,
@@ -54,7 +55,7 @@ def make_model(seed: int) -> XGBClassifier:
         reg_lambda=2.0,
         gamma=0.1,
         eval_metric="logloss",
-        early_stopping_rounds=50,
+        early_stopping_rounds=50 if early_stopping else None,
         random_state=seed,
         n_jobs=-1,
     )
@@ -72,6 +73,7 @@ def walk_forward(ds: pd.DataFrame, train_days: int, calib_days: int,
     end = t.max()
 
     oos = []
+    best_iters = []
     fold = 0
     cursor = start
     while cursor + pd.Timedelta(days=test_days) <= end + pd.Timedelta(days=step_days):
@@ -87,6 +89,7 @@ def walk_forward(ds: pd.DataFrame, train_days: int, calib_days: int,
         model = make_model(seed=fold)
         model.fit(X[tr_mask], y[tr_mask],
                   eval_set=[(X[ca_mask], y[ca_mask])], verbose=False)
+        best_iters.append(int(model.best_iteration) + 1)
 
         p_calib_raw = model.predict_proba(X[ca_mask])[:, 1]
         iso = make_calibrator(calib_method)
@@ -104,7 +107,7 @@ def walk_forward(ds: pd.DataFrame, train_days: int, calib_days: int,
 
     if not oos:
         raise RuntimeError("Nenhum fold gerado — dataset curto demais para os parametros.")
-    return pd.concat(oos, ignore_index=True), feats, model
+    return pd.concat(oos, ignore_index=True), feats, model, best_iters
 
 
 def evaluate(oos: pd.DataFrame, payout: float) -> dict:
@@ -153,12 +156,16 @@ def main():
     ap.add_argument("--report", default="report.json")
     ap.add_argument("--save-model", default=None,
                     help="ex: model.joblib — salva modelo final p/ producao")
+    ap.add_argument("--min-signal-thr", type=float, default=0.53,
+                    help="threshold usado pelo alert_ml.py (p/ trava de seguranca)")
+    ap.add_argument("--min-coverage", type=float, default=0.05,
+                    help="cobertura minima do modelo final na janela de calibracao")
     args = ap.parse_args()
 
     ds = pd.read_parquet(args.data)
     print(f"Dataset: {len(ds):,} amostras")
 
-    oos, feats, last_model = walk_forward(
+    oos, feats, last_model, best_iters = walk_forward(
         ds, args.train_days, args.calib_days, args.test_days, args.step_days,
         args.calib_method)
 
@@ -185,19 +192,45 @@ def main():
     oos.to_parquet("oos_predictions.parquet", index=False)
     print(f"\nRelatorio salvo em {args.report}; previsoes OOS em oos_predictions.parquet")
 
-    # ---- modelo final para producao: treina no fim da serie ----
+    # ---- modelo final para producao ----
+    # Replica EXATAMENTE o setup validado no walk-forward: janela de treino
+    # de train_days (nao a serie inteira) e numero de arvores fixo = mediana
+    # dos folds. Antes, o early stopping usava os ultimos 28 dias e, quando o
+    # regime mudava, parava com 2-11 arvores -> modelo quase constante ->
+    # Platt com inclinacao ~0 -> p sempre ~0.50 -> NENHUM sinal (out-nov/2026).
     if args.save_model:
         import joblib
         t = pd.to_datetime(ds["candle_open"])
         cut = t.max() - pd.Timedelta(days=args.calib_days)
-        tr = t < cut
+        tr = (t >= cut - pd.Timedelta(days=args.train_days)) & (t < cut)
         ca = t >= cut
         Xf = ds[feats].astype(float).values
         yf = ds["y"].values
-        final = make_model(seed=0)
-        final.fit(Xf[tr], yf[tr], eval_set=[(Xf[ca], yf[ca])], verbose=False)
+        n_trees = max(30, int(np.median(best_iters)))
+        final = make_model(seed=0, n_estimators=n_trees, early_stopping=False)
+        final.fit(Xf[tr], yf[tr], verbose=False)
         iso = make_calibrator(args.calib_method)
         iso.fit(final.predict_proba(Xf[ca])[:, 1], yf[ca])
+
+        # ---- trava de seguranca: nao publica modelo "morto" ----
+        p_ca = iso.predict(final.predict_proba(Xf[ca])[:, 1])
+        thr = args.min_signal_thr
+        cobertura = float(((p_ca >= thr) | (p_ca <= 1 - thr)).mean())
+        slope = float(iso.lr.coef_[0][0]) if hasattr(iso, "lr") else float("nan")
+        info = {"arvores": n_trees, "platt_slope": round(slope, 4),
+                "p_min": round(float(p_ca.min()), 4),
+                "p_max": round(float(p_ca.max()), 4),
+                "cobertura_thr": thr, "cobertura_calib": round(cobertura, 4)}
+        res["modelo_final"] = info
+        Path(args.report).write_text(json.dumps(res, indent=2))
+        print(f"\nModelo final: {info}")
+
+        if not (slope > 0.2 and cobertura >= args.min_coverage):
+            raise SystemExit(
+                f"[ABORTADO] Modelo final degenerado (slope={slope:.4f}, "
+                f"cobertura @{thr}={cobertura:.1%} < {args.min_coverage:.0%}). "
+                f"model.joblib NAO foi sobrescrito; o anterior continua valendo.")
+
         joblib.dump({"model": final, "iso": iso, "features": feats},
                     args.save_model)
         print(f"Modelo final salvo em {args.save_model}")
