@@ -1,60 +1,68 @@
 {
-  "n_oos": 55051,
+  "n_oos": 55052,
   "folds": 42,
-  "base_rate_verde": 0.48949156236943925,
-  "auc": 0.5347752582530376,
-  "acc_sempre_opera": 0.5250585820421064,
+  "base_rate_verde": 0.4891375426869142,
+  "auc": 0.5340495911895313,
+  "acc_sempre_opera": 0.5242861294775848,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 55051,
+      "trades": 55052,
       "cobertura": 1.0,
-      "winrate": 0.5251,
-      "ev_por_trade": -0.0181
+      "winrate": 0.5243,
+      "ev_por_trade": -0.0196
     },
     {
       "threshold": 0.53,
-      "trades": 21633,
-      "cobertura": 0.393,
-      "winrate": 0.546,
-      "ev_por_trade": 0.021
+      "trades": 21201,
+      "cobertura": 0.385,
+      "winrate": 0.5436,
+      "ev_por_trade": 0.0165
     },
     {
       "threshold": 0.5348,
-      "trades": 18359,
-      "cobertura": 0.333,
-      "winrate": 0.5488,
-      "ev_por_trade": 0.0262
+      "trades": 17978,
+      "cobertura": 0.327,
+      "winrate": 0.5479,
+      "ev_por_trade": 0.0246
     },
     {
       "threshold": 0.55,
-      "trades": 10700,
-      "cobertura": 0.194,
-      "winrate": 0.5623,
-      "ev_por_trade": 0.0516
+      "trades": 10499,
+      "cobertura": 0.191,
+      "winrate": 0.5612,
+      "ev_por_trade": 0.0494
     },
     {
       "threshold": 0.58,
-      "trades": 3655,
-      "cobertura": 0.066,
-      "winrate": 0.5973,
-      "ev_por_trade": 0.1169
+      "trades": 3824,
+      "cobertura": 0.069,
+      "winrate": 0.5853,
+      "ev_por_trade": 0.0944
     },
     {
       "threshold": 0.6,
-      "trades": 1928,
-      "cobertura": 0.035,
-      "winrate": 0.6063,
-      "ev_por_trade": 0.1338
+      "trades": 1890,
+      "cobertura": 0.034,
+      "winrate": 0.5899,
+      "ev_por_trade": 0.1032
     },
     {
       "threshold": 0.65,
-      "trades": 344,
-      "cobertura": 0.006,
-      "winrate": 0.6076,
-      "ev_por_trade": 0.1361
+      "trades": 236,
+      "cobertura": 0.004,
+      "winrate": 0.6483,
+      "ev_por_trade": 0.2123
     }
-  ]
+  ],
+  "modelo_final": {
+    "arvores": 52,
+    "platt_slope": 0.4553,
+    "p_min": 0.4248,
+    "p_max": 0.5323,
+    "cobertura_thr": 0.53,
+    "cobertura_calib": 0.1903
+  }
 }
