@@ -1,68 +1,68 @@
 {
-  "n_oos": 55052,
+  "n_oos": 55058,
   "folds": 42,
-  "base_rate_verde": 0.4891375426869142,
-  "auc": 0.5340495911895313,
-  "acc_sempre_opera": 0.5242861294775848,
+  "base_rate_verde": 0.4888662864615496,
+  "auc": 0.5325184405437473,
+  "acc_sempre_opera": 0.5235024882850812,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 55052,
+      "trades": 55058,
       "cobertura": 1.0,
-      "winrate": 0.5243,
-      "ev_por_trade": -0.0196
+      "winrate": 0.5235,
+      "ev_por_trade": -0.0211
     },
     {
       "threshold": 0.53,
-      "trades": 21201,
-      "cobertura": 0.385,
-      "winrate": 0.5436,
-      "ev_por_trade": 0.0165
+      "trades": 21125,
+      "cobertura": 0.384,
+      "winrate": 0.5428,
+      "ev_por_trade": 0.015
     },
     {
       "threshold": 0.5348,
-      "trades": 17978,
+      "trades": 17989,
       "cobertura": 0.327,
       "winrate": 0.5479,
       "ev_por_trade": 0.0246
     },
     {
       "threshold": 0.55,
-      "trades": 10499,
-      "cobertura": 0.191,
-      "winrate": 0.5612,
-      "ev_por_trade": 0.0494
+      "trades": 10397,
+      "cobertura": 0.189,
+      "winrate": 0.559,
+      "ev_por_trade": 0.0453
     },
     {
       "threshold": 0.58,
-      "trades": 3824,
-      "cobertura": 0.069,
-      "winrate": 0.5853,
-      "ev_por_trade": 0.0944
+      "trades": 3614,
+      "cobertura": 0.066,
+      "winrate": 0.5811,
+      "ev_por_trade": 0.0866
     },
     {
       "threshold": 0.6,
-      "trades": 1890,
-      "cobertura": 0.034,
-      "winrate": 0.5899,
-      "ev_por_trade": 0.1032
+      "trades": 1798,
+      "cobertura": 0.033,
+      "winrate": 0.5923,
+      "ev_por_trade": 0.1076
     },
     {
       "threshold": 0.65,
-      "trades": 236,
+      "trades": 216,
       "cobertura": 0.004,
-      "winrate": 0.6483,
-      "ev_por_trade": 0.2123
+      "winrate": 0.588,
+      "ev_por_trade": 0.0995
     }
   ],
   "modelo_final": {
-    "arvores": 52,
-    "platt_slope": 0.4553,
-    "p_min": 0.4248,
-    "p_max": 0.5323,
+    "arvores": 44,
+    "platt_slope": 0.6214,
+    "p_min": 0.4279,
+    "p_max": 0.5233,
     "cobertura_thr": 0.53,
-    "cobertura_calib": 0.1903
+    "cobertura_calib": 0.2944
   }
 }
