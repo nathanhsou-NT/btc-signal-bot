@@ -44,6 +44,16 @@ def build_message() -> str:
             f"{t['threshold']:.2f} | {t['cobertura']:.1%} | "
             f"{t['winrate']:.1%} | {t['ev_por_trade']:+.4f}{flag}"
         )
+    alt = r.get("alternativa")
+    if alt:
+        def at(th, thr=0.53):
+            t = [x for x in th if abs(x["threshold"] - thr) < 1e-9]
+            return t[0] if t else None
+        a, b = at(r["thresholds"]), at(alt["thresholds"])
+        if a and b and "ev_dia" in a:
+            linhas += ["", "<b>Calibração @0.53 (walk-forward)</b>",
+                       f"{r.get('calibracao')}: {a['sinais_dia']:.0f}/dia, CALL {a['pct_call']:.0%}, EV/dia {a['ev_dia']:+.2f} ← usada",
+                       f"{alt['calibracao']}: {b['sinais_dia']:.0f}/dia, CALL {b['pct_call']:.0%}, EV/dia {b['ev_dia']:+.2f}"]
     mf = r.get("modelo_final")
     if mf:
         ok = mf["platt_slope"] > 0.2 and mf["cobertura_calib"] >= 0.05
@@ -54,6 +64,7 @@ def build_message() -> str:
             f"p na calibração: {mf['p_min']:.3f} – {mf['p_max']:.3f}",
             f"Sinais esperados @{mf['cobertura_thr']}: {mf['cobertura_calib']:.1%} das velas "
             f"(~{mf['cobertura_calib'] * 96:.0f}/dia)",
+            f"Calibração: {mf.get('calibracao', 'sigmoid')} | CALL {mf.get('pct_call_calib', 0):.0%} / PUT {1 - mf.get('pct_call_calib', 0):.0%}",
         ]
     return "\n".join(linhas)
 

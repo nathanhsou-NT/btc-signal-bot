@@ -34,12 +34,14 @@ from xgboost import XGBClassifier
 META_COLS = ["candle_open", "decision_time", "y"]
 
 
-from calibration import PlattCalibrator
+from calibration import CenteredPlattCalibrator, PlattCalibrator
 
 
 def make_calibrator(method: str):
     if method == "sigmoid":
         return PlattCalibrator()
+    if method == "centered":
+        return CenteredPlattCalibrator()
     return IsotonicRegression(out_of_bounds="clip", y_min=0.01, y_max=0.99)
 
 
@@ -95,11 +97,14 @@ def walk_forward(ds: pd.DataFrame, train_days: int, calib_days: int,
         iso = make_calibrator(calib_method)
         iso.fit(p_calib_raw, y[ca_mask])
 
-        p_test = iso.predict(model.predict_proba(X[te_mask])[:, 1])
+        p_te_raw = model.predict_proba(X[te_mask])[:, 1]
+        p_test = iso.predict(p_te_raw)
+        p_test_c = make_calibrator("centered").fit(p_calib_raw, y[ca_mask]).predict(p_te_raw)
         oos.append(pd.DataFrame({
             "time": t[te_mask].values,
             "y": y[te_mask],
             "p": p_test,
+            "p_centered": p_test_c,
             "fold": fold,
         }))
         fold += 1
@@ -110,7 +115,8 @@ def walk_forward(ds: pd.DataFrame, train_days: int, calib_days: int,
     return pd.concat(oos, ignore_index=True), feats, model, best_iters
 
 
-def evaluate(oos: pd.DataFrame, payout: float) -> dict:
+def evaluate(oos: pd.DataFrame, payout: float, col: str = "p") -> dict:
+    oos = oos.assign(p=oos[col])
     breakeven = 1 / (1 + payout)
     res = {"n_oos": int(len(oos)),
            "folds": int(oos["fold"].nunique()),
@@ -138,6 +144,9 @@ def evaluate(oos: pd.DataFrame, payout: float) -> dict:
             "cobertura": round(n / len(oos), 3),
             "winrate": round(winrate, 4),
             "ev_por_trade": round(ev, 4),
+            "sinais_dia": round(n / len(oos) * 96, 1),
+            "ev_dia": round(ev * n / len(oos) * 96, 3),
+            "pct_call": round(float(call[traded].mean()), 3),
         })
     return res
 
@@ -149,8 +158,10 @@ def main():
                     help="payout da corretora (0.87 = 87%%)")
     ap.add_argument("--train-days", type=int, default=120)
     ap.add_argument("--calib-days", type=int, default=28)
-    ap.add_argument("--calib-method", choices=["sigmoid", "isotonic"],
-                    default="sigmoid")
+    ap.add_argument("--calib-method", choices=["auto", "sigmoid", "centered", "isotonic"],
+                    default="centered",
+                    help="centered (padrao) = CALL/PUT simetricos, sem vies da tendencia "
+                         "dos ultimos 28 dias; auto = o de maior EV/dia no walk-forward")
     ap.add_argument("--test-days", type=int, default=14)
     ap.add_argument("--step-days", type=int, default=14)
     ap.add_argument("--report", default="report.json")
@@ -167,9 +178,24 @@ def main():
 
     oos, feats, last_model, best_iters = walk_forward(
         ds, args.train_days, args.calib_days, args.test_days, args.step_days,
-        args.calib_method)
+        "isotonic" if args.calib_method == "isotonic" else "sigmoid")
 
-    res = evaluate(oos, args.payout)
+    res = evaluate(oos, args.payout, "p")
+    res_c = evaluate(oos, args.payout, "p_centered")
+
+    # escolhe a calibracao com maior EV/dia no threshold usado ao vivo
+    def ev_dia(r):
+        t = [x for x in r["thresholds"] if abs(x["threshold"] - args.min_signal_thr) < 1e-9]
+        return t[0]["ev_dia"] if t else float("-inf")
+    if args.calib_method == "auto":
+        args.calib_method = "centered" if ev_dia(res_c) >= ev_dia(res) else "sigmoid"
+    if args.calib_method == "centered":
+        res, res_c = res_c, res
+    res["calibracao"] = args.calib_method
+    res["alternativa"] = {"calibracao": "sigmoid" if args.calib_method == "centered" else "centered",
+                          "thresholds": res_c["thresholds"]}
+    print(f"\nCalibracao escolhida: {args.calib_method} "
+          f"(EV/dia @{args.min_signal_thr}: {ev_dia(res):+.3f} vs alternativa {ev_dia(res_c):+.3f})")
 
     print("\n===== RESULTADO OUT-OF-SAMPLE (walk-forward) =====")
     print(f"Amostras OOS : {res['n_oos']:,}  ({res['folds']} folds)")
@@ -216,11 +242,14 @@ def main():
         p_ca = iso.predict(final.predict_proba(Xf[ca])[:, 1])
         thr = args.min_signal_thr
         cobertura = float(((p_ca >= thr) | (p_ca <= 1 - thr)).mean())
+        n_sig = int(((p_ca >= thr) | (p_ca <= 1 - thr)).sum())
+        pct_call = float((p_ca >= thr).sum() / n_sig) if n_sig else 0.0
         slope = float(iso.lr.coef_[0][0]) if hasattr(iso, "lr") else float("nan")
         info = {"arvores": n_trees, "platt_slope": round(slope, 4),
                 "p_min": round(float(p_ca.min()), 4),
                 "p_max": round(float(p_ca.max()), 4),
-                "cobertura_thr": thr, "cobertura_calib": round(cobertura, 4)}
+                "cobertura_thr": thr, "cobertura_calib": round(cobertura, 4),
+                "pct_call_calib": round(pct_call, 3), "calibracao": args.calib_method}
         res["modelo_final"] = info
         Path(args.report).write_text(json.dumps(res, indent=2))
         print(f"\nModelo final: {info}")
