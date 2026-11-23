@@ -1,68 +1,167 @@
 {
-  "n_oos": 55058,
+  "n_oos": 55075,
   "folds": 42,
-  "base_rate_verde": 0.4888662864615496,
-  "auc": 0.5325184405437473,
-  "acc_sempre_opera": 0.5235024882850812,
+  "base_rate_verde": 0.4884067181116659,
+  "auc": 0.533551435117915,
+  "acc_sempre_opera": 0.5222696323195642,
   "payout": 0.87,
   "breakeven_winrate": 0.53475935828877,
   "thresholds": [
     {
       "threshold": 0.5,
-      "trades": 55058,
+      "trades": 55075,
       "cobertura": 1.0,
-      "winrate": 0.5235,
-      "ev_por_trade": -0.0211
+      "winrate": 0.5225,
+      "ev_por_trade": -0.0229,
+      "sinais_dia": 96.0,
+      "ev_dia": -2.197,
+      "pct_call": 0.522
     },
     {
       "threshold": 0.53,
-      "trades": 21125,
-      "cobertura": 0.384,
-      "winrate": 0.5428,
-      "ev_por_trade": 0.015
+      "trades": 19097,
+      "cobertura": 0.347,
+      "winrate": 0.5477,
+      "ev_por_trade": 0.0242,
+      "sinais_dia": 33.3,
+      "ev_dia": 0.804,
+      "pct_call": 0.523
     },
     {
       "threshold": 0.5348,
-      "trades": 17989,
-      "cobertura": 0.327,
-      "winrate": 0.5479,
-      "ev_por_trade": 0.0246
+      "trades": 16177,
+      "cobertura": 0.294,
+      "winrate": 0.5478,
+      "ev_por_trade": 0.0243,
+      "sinais_dia": 28.2,
+      "ev_dia": 0.685,
+      "pct_call": 0.528
     },
     {
       "threshold": 0.55,
-      "trades": 10397,
-      "cobertura": 0.189,
-      "winrate": 0.559,
-      "ev_por_trade": 0.0453
+      "trades": 9396,
+      "cobertura": 0.171,
+      "winrate": 0.5635,
+      "ev_por_trade": 0.0538,
+      "sinais_dia": 16.4,
+      "ev_dia": 0.881,
+      "pct_call": 0.548
     },
     {
       "threshold": 0.58,
-      "trades": 3614,
-      "cobertura": 0.066,
-      "winrate": 0.5811,
-      "ev_por_trade": 0.0866
+      "trades": 3048,
+      "cobertura": 0.055,
+      "winrate": 0.5715,
+      "ev_por_trade": 0.0687,
+      "sinais_dia": 5.3,
+      "ev_dia": 0.365,
+      "pct_call": 0.548
     },
     {
       "threshold": 0.6,
-      "trades": 1798,
-      "cobertura": 0.033,
-      "winrate": 0.5923,
-      "ev_por_trade": 0.1076
+      "trades": 1336,
+      "cobertura": 0.024,
+      "winrate": 0.5816,
+      "ev_por_trade": 0.0876,
+      "sinais_dia": 2.3,
+      "ev_dia": 0.204,
+      "pct_call": 0.518
     },
     {
       "threshold": 0.65,
-      "trades": 216,
-      "cobertura": 0.004,
-      "winrate": 0.588,
-      "ev_por_trade": 0.0995
+      "trades": 107,
+      "cobertura": 0.002,
+      "winrate": 0.6449,
+      "ev_por_trade": 0.2059,
+      "sinais_dia": 0.2,
+      "ev_dia": 0.038,
+      "pct_call": 0.533
     }
   ],
+  "calibracao": "centered",
+  "alternativa": {
+    "calibracao": "sigmoid",
+    "thresholds": [
+      {
+        "threshold": 0.5,
+        "trades": 55075,
+        "cobertura": 1.0,
+        "winrate": 0.5241,
+        "ev_por_trade": -0.02,
+        "sinais_dia": 96.0,
+        "ev_dia": -1.916,
+        "pct_call": 0.418
+      },
+      {
+        "threshold": 0.53,
+        "trades": 21729,
+        "cobertura": 0.395,
+        "winrate": 0.5479,
+        "ev_por_trade": 0.0246,
+        "sinais_dia": 37.9,
+        "ev_dia": 0.933,
+        "pct_call": 0.331
+      },
+      {
+        "threshold": 0.5348,
+        "trades": 18471,
+        "cobertura": 0.335,
+        "winrate": 0.5505,
+        "ev_por_trade": 0.0295,
+        "sinais_dia": 32.2,
+        "ev_dia": 0.95,
+        "pct_call": 0.32
+      },
+      {
+        "threshold": 0.55,
+        "trades": 10690,
+        "cobertura": 0.194,
+        "winrate": 0.561,
+        "ev_por_trade": 0.0491,
+        "sinais_dia": 18.6,
+        "ev_dia": 0.914,
+        "pct_call": 0.291
+      },
+      {
+        "threshold": 0.58,
+        "trades": 3806,
+        "cobertura": 0.069,
+        "winrate": 0.5888,
+        "ev_por_trade": 0.1011,
+        "sinais_dia": 6.6,
+        "ev_dia": 0.671,
+        "pct_call": 0.198
+      },
+      {
+        "threshold": 0.6,
+        "trades": 1978,
+        "cobertura": 0.036,
+        "winrate": 0.6057,
+        "ev_por_trade": 0.1326,
+        "sinais_dia": 3.4,
+        "ev_dia": 0.457,
+        "pct_call": 0.118
+      },
+      {
+        "threshold": 0.65,
+        "trades": 350,
+        "cobertura": 0.006,
+        "winrate": 0.6114,
+        "ev_por_trade": 0.1434,
+        "sinais_dia": 0.6,
+        "ev_dia": 0.087,
+        "pct_call": 0.031
+      }
+    ]
+  },
   "modelo_final": {
-    "arvores": 44,
-    "platt_slope": 0.6214,
-    "p_min": 0.4279,
-    "p_max": 0.5233,
+    "arvores": 46,
+    "platt_slope": 0.7177,
+    "p_min": 0.4401,
+    "p_max": 0.5609,
     "cobertura_thr": 0.53,
-    "cobertura_calib": 0.2944
+    "cobertura_calib": 0.1155,
+    "pct_call_calib": 0.535,
+    "calibracao": "centered"
   }
 }
